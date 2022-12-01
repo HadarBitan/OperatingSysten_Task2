@@ -69,53 +69,9 @@ int server(char *portNum)
             printf("Couldn't receive\n");
             return -1;
         }
-        printf("%s\n", client_message);
+        printf("OUTPUT: %s\n", client_message);
     }
-
-    // Closing the socket:
-    close(client_sock);
-    close(socket_desc);
-
-    return 0;
 }
-
-//int ipTOint(char *ip){
-//    //for this converting from a ip address to an int i used this code: https://gist.github.com/jayjayswal/fc435fe261af9e45ccaf
-//    char c;
-//    c = *ip;
-//    unsigned int integer;
-//    int val;
-//    int i,j=0;
-//    for (j=0;j<4;j++) {
-//        if (!isdigit(c)){  //first char is 0
-//            return (0);
-//        }
-//        val=0;
-//        for (i=0;i<3;i++) {
-//            if (isdigit(c)) {
-//                val = (val * 10) + (c - '0');
-//                c = *++ip;
-//            } else
-//                break;
-//        }
-//        if(val<0 || val>255){
-//            return (0);
-//        }
-//        if (c == '.') {
-//            integer=(integer<<8) | val;
-//            c = *++ip;
-//        }
-//        else if(j==3 && c == '\0'){
-//            integer=(integer<<8) | val;
-//            break;
-//        }
-//
-//    }
-//    if(c != '\0'){
-//        return (0);
-//    }
-//    return (htonl(integer));
-//}
 
 //the client is the user(stdin) that send massage to the socket(server)
 int client(char * portNum, char * ipAddress)
@@ -150,23 +106,16 @@ int client(char * portNum, char * ipAddress)
     }
     printf("Connected with server successfully\n");
 
-    // Get input from the user:
-    printf("Enter message: ");
-
     //we run in an infinite loop to always read from stdin(user)
     while (1) {
         read(0, client_message, 256);
-
         // Send the message to server:
         if (send(socket_desc, client_message, strlen(client_message), 0) < 0) {
             printf("Unable to send message\n");
             return -1;
         }
+        printf("\n");
     }
-    // Close the socket:
-    close(socket_desc);
-
-    return 0;
 }
 
 int main(int argc, char *argv[]) {
