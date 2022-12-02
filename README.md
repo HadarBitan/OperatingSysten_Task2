@@ -9,8 +9,11 @@
   USE: ./mytee -> file.txt
 
 * mync: read input from stdin and transfer by socket to stdout.
+* 
   USE: open two terminals:
+  
   1 ./nc -lv (port_number) -> to open server
+  
   2 ./nc -v (ip_address , port) -> open the client
 
 ### Part B
