@@ -23,7 +23,7 @@
 
 * pipe
 
-  USE:command1 | command2 -> for example: cat file1.txt | sort -> will sort for us what the file contains.
+  USE:  first | seconde -> for example: cat file1.txt | sort -> will sort for us what the file contains.
   
 *
 
