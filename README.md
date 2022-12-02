@@ -1,16 +1,15 @@
 318463882 318356599
-### OperatingSysten_Task2
+# OperatingSysten_Task2
 
-# matala 2
+## How to run?
+### Part A
 
-### How to run?
-## part A
 * mytee: 
 
 * mync:
 
 
-## part B
+### Part B
 
 * COPY: the same like in assignment 1 -> copies the content of SRC file to DEST file.
 
