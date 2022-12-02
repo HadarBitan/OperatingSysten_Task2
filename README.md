@@ -1,4 +1,3 @@
-318463882 318356599
 ### OperatingSysten_Task2
 
 # matala 2
