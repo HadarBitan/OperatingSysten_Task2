@@ -14,7 +14,8 @@
 
 * COPY:
 
-* DIR: 
+* DIR: prints everything the curret reposetory contains like ls we כamiliar with.
+  USE: DIR
 
 * pipe
 
