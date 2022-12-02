@@ -12,12 +12,23 @@
 
 ## part B
 
-* COPY:
+* COPY: the same like in assignment 1 -> copies the content of SRC file to DEST file.
 
-* DIR: prints everything the curret reposetory contains like ls we כamiliar with.
+  USE: COPY
+  
+* DIR: prints everything the curret reposetory contains like ls we familiar with.
+
   USE: DIR
+  
+* USE:  you can try any linux command in the shell you know.
 
 * pipe
+
+  USE:command1 | command2 -> for example: cat file1.txt | sort -> will sort for us what the file contains.
+  
+*
+
+*
 
 
 #### code we have used:
