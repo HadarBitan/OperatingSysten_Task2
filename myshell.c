@@ -17,6 +17,8 @@
 #define OUTPUT 1
 #define APPEND 2
 
+//set follow-fork-mode child
+//set detach-on-fork off
 
 /*
  * Function Create array of strings fro user input
@@ -39,13 +41,14 @@ char ** parseCMD(char * cmdline) {
         idx++;
     }
 
-    line[strcspn(line, "\n")] = 0;
     char **argv;
     argv = malloc((countSpace + 1) * sizeof(char *));
     int i = 0;
     argv[i] = strtok(line, " ");//separate string by spaces
-    while (argv[i] != NULL) {
-        argv[++i] = strtok(NULL, " ");
+    i++;
+    while (i != (countSpace + 1)) {
+        argv[i] = strtok(NULL, " ");
+        i++;
     }
     return argv;
 }
@@ -82,26 +85,20 @@ void tokenize_buffer(char** param,int *nr,char *buf,const char *c){
 
 void dir() {
     struct dirent *de;
-    char buff[256];
-    char *result;
-
-    result = fgets(buff, 256, stdin);
-    result[strlen(result) - 1] = '\0';
-    if (strcmp(result, "DIR") == 0) {
-        DIR *dir = opendir(".");
-        if (dir == NULL) // opendir returns NULL if couldn't open directory
-        {
-            printf("Could not open directory");
-            closedir(dir);
-        } else {
-            while ((de = readdir(dir)) != NULL) {
-                if (de->d_name[0] != '.')
-                    printf("%s\n", de->d_name);
-            }
-        }
+    DIR *dir = opendir(".");
+    if (dir == NULL) // opendir returns NULL if couldn't open directory
+    {
+        printf("Could not open directory");
         closedir(dir);
+        return;
+    } else {
+        printf("Manage to open directory");
+        while ((de = readdir(dir)) != NULL) {
+            if (de->d_name[0] != '.')
+                printf("%s\n", de->d_name);
+        }
     }
-    bzero(buff, 256);
+    closedir(dir);
 }
 
 void copy(char * src, char * dst)
@@ -137,28 +134,26 @@ void copy(char * src, char * dst)
     close(f2);
 }
 
-void otherCommands(char * cmdline)
-{
+//the execve here is according to https://linuxhint.com/c-execve-function-usage/
+void otherCommands(char * cmdline) {
     pid_t pid = fork();
-    if(pid == 0)
-    {
-        char ** arguments = parseCMD(cmdline);
-        //the execve here is according to https://linuxhint.com/c-execve-function-usage/
-        char * path = "/bin/";
-        char * fullPath = (char *) malloc(strlen(path) + sizeof(arguments[0]) + 1);
+    if (pid == 0) {
+        char **arguments = parseCMD(cmdline);
+        char *path = "/bin/";
+        char *fullPath = (char *) malloc(strlen(path) + sizeof(arguments[0]) + 1);
         strcpy(fullPath, path);
-        for(int i = 0; arguments[i] != NULL; i++)
-        {
-            strcat(fullPath, arguments[0]);
-        }
+        strcat(fullPath, arguments[0]);
+
         char **env = {NULL};
         if (execve(fullPath, arguments, env) == -1) //execve will always override the process it run on, in this case it will override the child process
         {
             perror("error");
         }
-    }
-    else {
+        return;
+    } else {
+        // I'm the parent process
         wait(NULL);
+        return;
     }
 }
 
@@ -405,15 +400,14 @@ int main(int argc, char const *argv[])
     char pwd[PATH_MAX];
 
     while (1) {
+        memset(cmdLine, 0, LINE_MAX);
         if (read(0, cmdLine, LINE_MAX) == -1)
             exit(2);
-        if(strcmp(cmdLine, "quit") == 0)
-            return 0;
 
         //for this function we used:
         //https://man7.org/linux/man-pages/man3/opendir.3.html
         //https://man7.org/linux/man-pages/man3/readdir.3.html
-        if(strcmp(cmdLine, "DIR") == 0)
+        if((strcmp(cmdLine, "DIR") == 0) || (strcmp(cmdLine, "DIR\n") == 0) || (strcmp(cmdLine, "dir") == 0) || (strcmp(cmdLine, "dir\n") == 0))
         {
             dir();
             continue;
